@@ -36,14 +36,14 @@ func TestVariable(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var1 := MbVar{name: tt.name, fmt: tt.fmt, offset: tt.offset, scale: tt.scale, endian: tt.endian}
+			var1 := MbVar{Name: tt.name, Fmt: tt.fmt, Offset: tt.offset, Scale: tt.scale, Endian: tt.endian}
 			var1.SetReg(tt.reg)
 
-			if var1.valueType != VALUE_TYPE_INT {
-				t.Errorf("got value type %d want %d", var1.valueType, VALUE_TYPE_INT)
+			if var1.ValueType != VALUE_TYPE_INT {
+				t.Errorf("got value type %d want %d", var1.ValueType, VALUE_TYPE_INT)
 			}
-			if var1.valueInt != tt.want {
-				t.Errorf("got value %d want %d", var1.valueInt, tt.want)
+			if var1.ValueInt != tt.want {
+				t.Errorf("got value %d want %d", var1.ValueInt, tt.want)
 
 			}
 		})
@@ -79,14 +79,14 @@ func TestVariableFloat(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var1 := MbVar{name: tt.name, fmt: tt.fmt, offset: tt.offset, scale: tt.scale, endian: tt.endian}
+			var1 := MbVar{Name: tt.name, Fmt: tt.fmt, Offset: tt.offset, Scale: tt.scale, Endian: tt.endian}
 			var1.SetReg(tt.reg)
 
-			if var1.valueType != VALUE_TYPE_FLOAT {
-				t.Errorf("got value type %d want %d", var1.valueType, VALUE_TYPE_FLOAT)
+			if var1.ValueType != VALUE_TYPE_FLOAT {
+				t.Errorf("got value type %d want %d", var1.ValueType, VALUE_TYPE_FLOAT)
 			}
-			if !almostEqual(var1.valueFloat, tt.want) {
-				t.Errorf("got value %f want %f", var1.valueFloat, tt.want)
+			if !almostEqual(var1.ValueFloat, tt.want) {
+				t.Errorf("got value %f want %f", var1.ValueFloat, tt.want)
 
 			}
 		})

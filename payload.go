@@ -29,7 +29,7 @@ func (r *MbPayload) AddVariable(address int, v MbVar) {
 	}
 	r.vars[address] = v
 	var size int
-	switch v.fmt {
+	switch v.Fmt {
 	case "uint16", "int16":
 		size = 2 * (address - r.start + 1)
 	case "uint32", "int32", "float32":
@@ -50,20 +50,20 @@ func (r *MbPayload) regToVar(start int, reg []byte) []Value {
 		address := start + i/2
 		if _, ok := r.vars[address]; ok {
 			v := r.vars[address]
-			switch v.fmt {
+			switch v.Fmt {
 			case "uint16", "int16":
 				v.SetReg(reg[i : i+2])
-				if v.valueType == VALUE_TYPE_INT {
-					val[ctr] = Value{v.name, v.valueInt}
+				if v.ValueType == VALUE_TYPE_INT {
+					val[ctr] = Value{v.Name, v.ValueInt}
 				} else {
-					val[ctr] = Value{v.name, v.valueFloat}
+					val[ctr] = Value{v.Name, v.ValueFloat}
 				}
 			case "uint32", "int32", "float32":
 				v.SetReg(reg[i : i+4])
-				if v.valueType == VALUE_TYPE_INT {
-					val[ctr] = Value{v.name, v.valueInt}
+				if v.ValueType == VALUE_TYPE_INT {
+					val[ctr] = Value{v.Name, v.ValueInt}
 				} else {
-					val[ctr] = Value{v.name, v.valueFloat}
+					val[ctr] = Value{v.Name, v.ValueFloat}
 				}
 				i += 2
 			}
