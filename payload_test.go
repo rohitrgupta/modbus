@@ -83,7 +83,7 @@ func TestPayloadSizeM2(t *testing.T) {
 
 }
 
-func TestPayloadRegToVar(t *testing.T) {
+func TestPayloadRegToVar1(t *testing.T) {
 
 	mp := NewMbPayload()
 	mp.AddVariable(0, MbVar{name: "T01", fmt: "int16", offset: 0, scale: 1, endian: BIG_ENDIAN})
@@ -91,7 +91,7 @@ func TestPayloadRegToVar(t *testing.T) {
 	mp.AddVariable(2, MbVar{name: "T03", fmt: "int32", offset: 0, scale: 1, endian: BIG_ENDIAN})
 	mp.AddVariable(4, MbVar{name: "T04", fmt: "uint32", offset: 0, scale: 1, endian: BIG_ENDIAN})
 	mp.AddVariable(6, MbVar{name: "T05", fmt: "float32", offset: 0, scale: 1, endian: BIG_ENDIAN})
-	mp.regToVar(0, []byte{0, 1, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0x3f, 0, 0, 0})
+	vars := mp.regToVar(0, []byte{0, 1, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0x3f, 0, 0, 0})
 	if mp.vars[0].valueInt != 1 {
 		t.Errorf("got value %d want %d", mp.vars[0].valueInt, 1)
 	}
@@ -106,5 +106,46 @@ func TestPayloadRegToVar(t *testing.T) {
 	}
 	if mp.vars[6].valueFloat != 0.5 {
 		t.Errorf("got value %f want %f", mp.vars[3].valueFloat, 0.5)
+	}
+	if vars[0].Value != int64(1) {
+		t.Errorf("got value %d want %d", vars[0].Value, 1)
+	}
+	if vars[1].Value != int64(2) {
+		t.Errorf("got value %d want %d", vars[1].Value, 2)
+	}
+	if vars[2].Value != int64(3) {
+		t.Errorf("got value %d want %d", vars[2].Value, 3)
+	}
+	if vars[3].Value != int64(4) {
+		t.Errorf("got value %d want %d", vars[3].Value, 4)
+	}
+	if vars[4].Value != 0.5 {
+		t.Errorf("got value %f want %f", vars[4].Value, 0.5)
+	}
+}
+
+func TestPayloadRegToVar2(t *testing.T) {
+
+	mp := NewMbPayload()
+	mp.AddVariable(0, MbVar{name: "T01", fmt: "int16", offset: 0, scale: 10, endian: BIG_ENDIAN})
+	mp.AddVariable(1, MbVar{name: "T02", fmt: "uint16", offset: 0, scale: 10, endian: BIG_ENDIAN})
+	mp.AddVariable(2, MbVar{name: "T03", fmt: "int32", offset: 0, scale: 10, endian: BIG_ENDIAN})
+	mp.AddVariable(4, MbVar{name: "T04", fmt: "uint32", offset: 0, scale: 10, endian: BIG_ENDIAN})
+	mp.AddVariable(6, MbVar{name: "T05", fmt: "float32", offset: 0, scale: 1, endian: BIG_ENDIAN})
+	vars := mp.regToVar(0, []byte{0, 1, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0x3f, 0, 0, 0})
+	if vars[0].Value != 10.0 {
+		t.Errorf("got value %f want %f", vars[0].Value, 10.0)
+	}
+	if vars[1].Value != 20.0 {
+		t.Errorf("got value %f want %f", vars[1].Value, 20.0)
+	}
+	if vars[2].Value != 30.0 {
+		t.Errorf("got value %f want %f", vars[2].Value, 30.0)
+	}
+	if vars[3].Value != 40.0 {
+		t.Errorf("got value %f want %f", vars[3].Value, 40.0)
+	}
+	if vars[4].Value != 0.5 {
+		t.Errorf("got value %f want %f", vars[4].Value, 0.5)
 	}
 }

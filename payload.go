@@ -1,5 +1,10 @@
 package modbus
 
+type Value struct {
+	Name  string
+	Value interface{}
+}
+
 type MbPayload struct {
 	vars  map[int]MbVar
 	start int
@@ -35,10 +40,12 @@ func (r *MbPayload) AddVariable(address int, v MbVar) {
 	}
 }
 
-func (r *MbPayload) regToVar(start int, reg []byte) {
+func (r *MbPayload) regToVar(start int, reg []byte) []Value {
 	if len(reg) < r.size {
-		return
+		return nil
 	}
+	val := make([]Value, len(r.vars))
+	ctr := 0
 	for i := 0; i < len(reg); i += 2 {
 		address := start + i/2
 		if _, ok := r.vars[address]; ok {
@@ -46,11 +53,23 @@ func (r *MbPayload) regToVar(start int, reg []byte) {
 			switch v.fmt {
 			case "uint16", "int16":
 				v.SetReg(reg[i : i+2])
+				if v.valueType == VALUE_TYPE_INT {
+					val[ctr] = Value{v.name, v.valueInt}
+				} else {
+					val[ctr] = Value{v.name, v.valueFloat}
+				}
 			case "uint32", "int32", "float32":
 				v.SetReg(reg[i : i+4])
+				if v.valueType == VALUE_TYPE_INT {
+					val[ctr] = Value{v.name, v.valueInt}
+				} else {
+					val[ctr] = Value{v.name, v.valueFloat}
+				}
 				i += 2
 			}
+			ctr += 1
 			r.vars[address] = v
 		}
 	}
+	return val
 }
